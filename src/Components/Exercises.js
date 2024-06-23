@@ -15,16 +15,21 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
       let exercisesData = [];
 
       if (bodyPart === 'all') {
-        exercisesData = await fetchData('https://exercisedb.p.rapidapi.com/exercises', exerciseOptions);
+        exercisesData = await fetchData('https://exercisedb.p.rapidapi.com/exercises?limit=10&offset=0', exerciseOptions);
       } else {
-        exercisesData = await fetchData(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`, exerciseOptions);
+        exercisesData = await fetchData(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}?limit=10&offset=0 `, exerciseOptions);
       }
 
-      setExercises(exercisesData);
+      if (Array.isArray(exercisesData)) {
+        setExercises(exercisesData);
+      } else {
+        console.error('Fetched data is not an array:', exercisesData);
+        setExercises([]);
+      }
     };
 
     fetchExercisesData();
-  }, [bodyPart]);
+  }, [bodyPart, setExercises]);
 
   // Pagination
   const indexOfLastExercise = currentPage * exercisesPerPage;
@@ -64,4 +69,4 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
   );
 };
 
-export default Exercises; 
+export default Exercises;
